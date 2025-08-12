@@ -1,17 +1,16 @@
 package cn.qihuang02.fluidjs;
 
-import cn.qihuang02.fluidjs.kubejs.FluidJSPlugin;
-import cn.qihuang02.fluidjs.kubejs.event.FluidModificationEventJS;
+import cn.qihuang02.fluidjs.config.FluidJSConfig;
+import com.mojang.logging.LogUtils;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
-
-import com.mojang.logging.LogUtils;
-
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.common.Mod;
 
 @Mod(FluidJS.MODID)
 public class FluidJS {
@@ -23,17 +22,17 @@ public class FluidJS {
         return ResourceLocation.fromNamespaceAndPath(MODID, path);
     }
 
-    public FluidJS(@NotNull IEventBus modEventBus) {
-        LOGGER.info("FluidEvents is loading!");
+    public FluidJS(@NotNull IEventBus modEventBus, ModContainer container) {
+        LOGGER.info("FluidJS is loading!");
 
         modEventBus.addListener(this::commonSetup);
+
+        container.registerConfig(ModConfig.Type.SERVER, FluidJSConfig.SPEC, "fluidjs-server.toml");
+
+        LOGGER.info("FluidJS initialization completed!");
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-        LOGGER.info("FluidJS is applying fluid modifications...");
-
-        FluidJSPlugin.MODIFICATION.post(new FluidModificationEventJS());
-
-        LOGGER.info("FluidJS fluid modifications applied successfully!");
+        LOGGER.info("FluidJS common setup completed!");
     }
 }

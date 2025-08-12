@@ -3,7 +3,11 @@
   "package": "cn.qihuang02.fluidjs.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "FluidTypeAccessor"
+    "FluidTypeMixin",
+    "BlockStateMixin"
   ],
-  "minVersion": "0.8"
+  "client": [
+  ],
+  "minVersion": "0.8",
+  "refmap": "${mod_id}.refmap.json"
 }
