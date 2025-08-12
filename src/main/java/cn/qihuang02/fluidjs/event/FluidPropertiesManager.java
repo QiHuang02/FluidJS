@@ -50,16 +50,6 @@ public class FluidPropertiesManager {
         }
     }
 
-    public static void applyKubeJSModifications(Map<ResourceLocation, Map<String, Object>> modifications) {
-        if (modifications.isEmpty()) {
-            return;
-        }
-        FluidJS.LOGGER.info("Applying {} fluid modifications from KubeJS scripts.", modifications.size());
-        modifications.forEach((fluidId, props) -> {
-            FLUID_OVERRIDES.computeIfAbsent(fluidId, k -> new ConcurrentHashMap<>()).putAll(props);
-        });
-    }
-
     /**
      * Parses the raw list of strings from the config file into our structured map.
      */
