@@ -1,6 +1,6 @@
 package cn.qihuang02.fluidjs.mixin;
 
-import cn.qihuang02.fluidjs.event.FluidPropertiesManager;
+import cn.qihuang02.fluidjs.data.FluidPropertiesManager;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -39,16 +39,13 @@ public abstract class BlockStateMixin {
         }
 
         Fluid fluid = state.getFluidState().getType();
-        ResourceLocation fluidId;
 
-        if (fluid instanceof FlowingFluid flowingFluid) {
-            Fluid sourceFluid = flowingFluid.getSource(false).getType();
-            fluidId = BuiltInRegistries.FLUID.getKey(sourceFluid);
-        } else {
-            fluidId = BuiltInRegistries.FLUID.getKey(fluid);
+        if (fluid instanceof FlowingFluid) {
+            Fluid sourceFluid = ((FlowingFluid) fluid).getSource();
+            ResourceLocation fluidId = BuiltInRegistries.FLUID.getKey(sourceFluid);
+
+            FluidPropertiesManager.getProperty(fluidId, "luminosity", Integer.class)
+                    .ifPresent(cir::setReturnValue);
         }
-
-        FluidPropertiesManager.getProperty(fluidId, "luminosity", Integer.class)
-                .ifPresent(cir::setReturnValue);
     }
 }

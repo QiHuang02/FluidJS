@@ -1,6 +1,7 @@
-package cn.qihuang02.fluidjs.event;
+package cn.qihuang02.fluidjs.data;
 
 import cn.qihuang02.fluidjs.FluidJS;
+import cn.qihuang02.fluidjs.network.UpdateFluidPropertiesPacket;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -10,7 +11,10 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.Rarity;
+import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -60,9 +64,15 @@ public class FluidPropertiesReloadListener extends SimpleJsonResourceReloadListe
         }
         FluidPropertiesManager.setOverrides(newOverrides);
         FluidJS.LOGGER.info("Loaded {} fluid property overrides from data packs.", newOverrides.size());
+
+        if (ServerLifecycleHooks.getCurrentServer() != null) {
+            UpdateFluidPropertiesPacket packet = new UpdateFluidPropertiesPacket(FluidPropertiesManager.getOverrides());
+            PacketDistributor.sendToAllPlayers(packet);
+            FluidJS.LOGGER.info("Synced fluid properties to all connected clients.");
+        }
     }
 
-    private Object parseJsonValue(String propName, JsonElement propValue) {
+    private @Nullable Object parseJsonValue(String propName, JsonElement propValue) {
         try {
             return switch (propName) {
                 case "luminosity", "density", "viscosity", "temperature" -> propValue.getAsInt();

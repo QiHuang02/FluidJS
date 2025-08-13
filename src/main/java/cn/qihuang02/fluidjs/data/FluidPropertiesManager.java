@@ -1,4 +1,4 @@
-package cn.qihuang02.fluidjs.event;
+package cn.qihuang02.fluidjs.data;
 
 import net.minecraft.resources.ResourceLocation;
 
@@ -22,6 +22,10 @@ public class FluidPropertiesManager {
                 .map(props -> props.get(property.toLowerCase()))
                 .filter(type::isInstance)
                 .map(type::cast);
+    }
+
+    public static Map<ResourceLocation, Map<String, Object>> getOverrides() {
+        return FLUID_OVERRIDES;
     }
 
     public static void setOverrides(Map<ResourceLocation, Map<String, Object>> newOverrides) {
