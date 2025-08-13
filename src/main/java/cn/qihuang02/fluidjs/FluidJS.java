@@ -1,12 +1,10 @@
 package cn.qihuang02.fluidjs;
 
-import cn.qihuang02.fluidjs.config.FluidJSConfig;
 import com.mojang.logging.LogUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -26,8 +24,6 @@ public class FluidJS {
         LOGGER.info("FluidJS is loading!");
 
         modEventBus.addListener(this::commonSetup);
-
-        container.registerConfig(ModConfig.Type.SERVER, FluidJSConfig.SPEC, "fluidjs-server.toml");
 
         LOGGER.info("FluidJS initialization completed!");
     }
