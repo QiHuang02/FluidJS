@@ -1,6 +1,6 @@
 package cn.qihuang02.fluidjs.mixin;
 
-import cn.qihuang02.fluidjs.event.FluidPropertiesManager;
+import cn.qihuang02.fluidjs.data.FluidPropertiesManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
