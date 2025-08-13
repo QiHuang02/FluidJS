@@ -1,0 +1,78 @@
+package cn.qihuang02.fluidjs.event;
+
+import cn.qihuang02.fluidjs.FluidJS;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
+import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.item.Rarity;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+public class FluidPropertiesReloadListener extends SimpleJsonResourceReloadListener {
+    private static final String DIRECTORY = "properties";
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+
+    public FluidPropertiesReloadListener() {
+        super(GSON, DIRECTORY);
+    }
+
+    @Override
+    protected void apply(@NotNull Map<ResourceLocation, JsonElement> object, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profiler) {
+        Map<ResourceLocation, Map<String, Object>> newOverrides = new ConcurrentHashMap<>();
+
+        for (Map.Entry<ResourceLocation, JsonElement> entry : object.entrySet()) {
+            ResourceLocation fileLocation = entry.getKey();
+            if (!entry.getValue().isJsonObject()) continue;
+            JsonObject fileJson = entry.getValue().getAsJsonObject();
+
+            if (fileJson.has("values") && fileJson.get("values").isJsonObject()) {
+                JsonObject values = fileJson.getAsJsonObject("values");
+
+                for (Map.Entry<String, JsonElement> fluidEntry : values.entrySet()) {
+                    ResourceLocation fluidId = ResourceLocation.tryParse(fluidEntry.getKey());
+                    if (fluidId == null || !fluidEntry.getValue().isJsonObject()) {
+                        FluidJS.LOGGER.warn("Invalid fluid ID or format in file '{}': {}", fileLocation, fluidEntry.getKey());
+                        continue;
+                    }
+
+                    JsonObject properties = fluidEntry.getValue().getAsJsonObject();
+                    Map<String, Object> fluidProps = newOverrides.computeIfAbsent(fluidId, k -> new ConcurrentHashMap<>());
+
+                    for (Map.Entry<String, JsonElement> propEntry : properties.entrySet()) {
+                        String propName = propEntry.getKey().toLowerCase();
+                        JsonElement propValue = propEntry.getValue();
+                        Object parsedValue = parseJsonValue(propName, propValue);
+                        if (parsedValue != null) {
+                            fluidProps.put(propName, parsedValue);
+                        } else {
+                            FluidJS.LOGGER.warn("Could not parse property '{}' for fluid '{}' in file '{}'", propName, fluidId, fileLocation);
+                        }
+                    }
+                }
+            }
+        }
+        FluidPropertiesManager.setOverrides(newOverrides);
+        FluidJS.LOGGER.info("Loaded {} fluid property overrides from data packs.", newOverrides.size());
+    }
+
+    private Object parseJsonValue(String propName, JsonElement propValue) {
+        try {
+            return switch (propName) {
+                case "luminosity", "density", "viscosity", "temperature" -> propValue.getAsInt();
+                case "falldistancemodifier", "motionscale" -> propValue.getAsDouble();
+                case "canpush", "canswim", "candrown", "canextinguish", "canconverttosource", "supportsboating", "canhydrate" -> propValue.getAsBoolean();
+                case "rarity" -> Rarity.valueOf(propValue.getAsString().toUpperCase());
+                default -> null;
+            };
+        } catch (Exception e) {
+            return null;
+        }
+    }
+}
