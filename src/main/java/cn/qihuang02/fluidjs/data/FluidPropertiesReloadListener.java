@@ -54,7 +54,7 @@ public class FluidPropertiesReloadListener extends SimpleJsonResourceReloadListe
                     Map<String, Object> fluidProps = newOverrides.computeIfAbsent(fluidId, k -> new ConcurrentHashMap<>());
 
                     for (Map.Entry<String, JsonElement> propEntry : properties.entrySet()) {
-                        String propName = propEntry.getKey().toLowerCase();
+                        String propName = propEntry.getKey();
                         JsonElement propValue = propEntry.getValue();
                         Object parsedValue = parseJsonValue(propName, propValue);
                         if (parsedValue != null) {
