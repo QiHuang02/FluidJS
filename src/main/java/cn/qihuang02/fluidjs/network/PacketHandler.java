@@ -1,6 +1,8 @@
 package cn.qihuang02.fluidjs.network;
 
 import cn.qihuang02.fluidjs.FluidJS;
+import cn.qihuang02.fluidjs.network.client.ClientPayloadHandler;
+import cn.qihuang02.fluidjs.network.packet.UpdateFluidPropertiesPacket;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;

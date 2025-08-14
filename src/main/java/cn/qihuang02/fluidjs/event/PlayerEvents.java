@@ -2,7 +2,7 @@ package cn.qihuang02.fluidjs.event;
 
 import cn.qihuang02.fluidjs.FluidJS;
 import cn.qihuang02.fluidjs.data.FluidPropertiesManager;
-import cn.qihuang02.fluidjs.network.UpdateFluidPropertiesPacket;
+import cn.qihuang02.fluidjs.network.packet.UpdateFluidPropertiesPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;

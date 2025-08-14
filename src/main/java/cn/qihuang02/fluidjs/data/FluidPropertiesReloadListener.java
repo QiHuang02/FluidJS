@@ -1,16 +1,20 @@
 package cn.qihuang02.fluidjs.data;
 
 import cn.qihuang02.fluidjs.FluidJS;
-import cn.qihuang02.fluidjs.network.UpdateFluidPropertiesPacket;
+import cn.qihuang02.fluidjs.kubejs.FluidJSPlugin;
+import cn.qihuang02.fluidjs.kubejs.ModifyFluidPropertiesEvent;
+import cn.qihuang02.fluidjs.network.packet.UpdateFluidPropertiesPacket;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import dev.latvian.mods.kubejs.script.ScriptType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.Rarity;
+import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
@@ -64,6 +68,12 @@ public class FluidPropertiesReloadListener extends SimpleJsonResourceReloadListe
         }
         FluidPropertiesManager.setOverrides(newOverrides);
         FluidJS.LOGGER.info("Loaded {} fluid property overrides from data packs.", newOverrides.size());
+
+        if (ModList.get().isLoaded("kubejs")) {
+            FluidJS.LOGGER.info("KubeJS detected, applying script modifications...");
+            FluidJSPlugin.MODIFY.post(ScriptType.SERVER, new ModifyFluidPropertiesEvent());
+            FluidJS.LOGGER.info("Finished applying KubeJS script modifications.");
+        }
 
         if (ServerLifecycleHooks.getCurrentServer() != null) {
             UpdateFluidPropertiesPacket packet = new UpdateFluidPropertiesPacket(FluidPropertiesManager.getOverrides());

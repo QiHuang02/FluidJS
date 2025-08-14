@@ -1,4 +1,4 @@
-package cn.qihuang02.fluidjs.network;
+package cn.qihuang02.fluidjs.network.packet;
 
 import cn.qihuang02.fluidjs.FluidJS;
 import net.minecraft.network.FriendlyByteBuf;
