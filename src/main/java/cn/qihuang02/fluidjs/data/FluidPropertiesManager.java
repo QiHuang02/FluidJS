@@ -19,7 +19,7 @@ public class FluidPropertiesManager {
      */
     public static <T> Optional<T> getProperty(ResourceLocation fluidId, String property, Class<T> type) {
         return Optional.ofNullable(FLUID_OVERRIDES.get(fluidId))
-                .map(props -> props.get(property.toLowerCase()))
+                .map(props -> props.get(property))
                 .filter(type::isInstance)
                 .map(type::cast);
     }
