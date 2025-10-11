@@ -2,7 +2,6 @@
   "itemGroup.fluidjs": "Example Mod Tab",
   "block.fluidjs.example_block": "Example Block",
   "item.fluidjs.example_item": "Example Item",
-
   "fluidjs.configuration.title": "FluidJS Configs",
   "fluidjs.configuration.section.fluidjs.common.toml": "FluidJS Configs",
   "fluidjs.configuration.section.fluidjs.common.toml.title": "FluidJS Configs",
