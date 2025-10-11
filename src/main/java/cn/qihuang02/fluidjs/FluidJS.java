@@ -1,5 +1,6 @@
 package cn.qihuang02.fluidjs;
 
+import cn.qihuang02.fluidjs.kubejs.FluidJSStartupScriptRunner;
 import com.mojang.logging.LogUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
@@ -29,6 +30,7 @@ public class FluidJS {
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
+        event.enqueueWork(FluidJSStartupScriptRunner::apply);
         LOGGER.info("FluidJS common setup completed!");
     }
 }

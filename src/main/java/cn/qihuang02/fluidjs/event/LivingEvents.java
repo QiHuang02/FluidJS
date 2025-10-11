@@ -24,7 +24,7 @@ public class LivingEvents {
         ResourceLocation fluidTypeId = NeoForgeRegistries.FLUID_TYPES.getKey(fluidType);
 
         if (fluidTypeId != null) {
-            boolean canDrownOverride = FluidPropertiesManager.getProperty(fluidTypeId, "candrown", Boolean.class)
+            boolean canDrownOverride = FluidPropertiesManager.getProperty(fluidTypeId, "canDrown", Boolean.class)
                     .orElse(true);
 
             if (!canDrownOverride) {
