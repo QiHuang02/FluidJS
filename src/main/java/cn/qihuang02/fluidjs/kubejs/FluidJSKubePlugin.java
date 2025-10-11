@@ -1,4 +1,4 @@
-package cn.qihuang02.fluidjs.kube;
+package cn.qihuang02.fluidjs.kubejs;
 
 import dev.latvian.mods.kubejs.plugin.KubeJSPlugins;
 
