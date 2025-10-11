@@ -28,8 +28,8 @@ public class FluidPropertiesManager {
         return FLUID_OVERRIDES;
     }
 
-    public static void setOverrides(Map<ResourceLocation, Map<String, Object>> newOverrides) {
+    public static void clearOverrides() {
         FLUID_OVERRIDES.clear();
-        FLUID_OVERRIDES.putAll(newOverrides);
     }
+
 }

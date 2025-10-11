@@ -1,135 +1,62 @@
-
 # FluidJS
 
-FluidJS is a powerful Minecraft mod that allows you to modify fluid properties through data maps. Customize lightLevel, temperature, viscosity, density, flow behavior, and more for both vanilla and modded fluids using simple JSON configuration files.
+FluidJS is a lightweight Minecraft mod that exposes fluid property overrides to KubeJS **startup** scripts. Adjust luminosity, temperature, viscosity, density, motion behaviour, and more for both vanilla and modded fluids using familiar scripting tools.
 
 ## Features
 
-- **Data Map Integration**: Uses Minecraft's native data map system for fluid property modification
-- **Comprehensive Property Control**: Modify multiple fluid properties including:
-  - Light Level (0-15)
-  - Temperature
-  - Viscosity 
-  - Density
-  - Flow behavior (tick delay, level decrease per block)
-  - Interaction properties (can swim, can drown, can extinguish, etc.)
-- **Hot Reload Support**: Configuration changes are applied when you reload resources (`/reload`)
-- **Validation System**: Built-in validation prevents invalid configurations
-- **Cross-Mod Compatibility**: Works with fluids from other mods
+- **KubeJS Startup Integration**: Configure fluids inside `kubejs/startup_scripts` without relying on data packs or resource reloads.
+- **Comprehensive Property Control**: Override light level, density, temperature, viscosity, motion scale, fall distance modifier, and various interaction flags.
+- **Cross-Mod Compatibility**: Works with fluids registered by other mods.
 
 ## Installation
 
-1. Download the latest version of FluidJS
-2. Place the `.jar` file in your `mods` folder
-3. Start your Minecraft server/client with NeoForge 21.1.186+
+1. Download the latest FluidJS release.
+2. Place the `.jar` file in your `mods` folder.
+3. Install [KubeJS](https://kubejs.com/) 6+ on both client and server if you plan to author scripts.
+4. Launch Minecraft with NeoForge 21.1.186+.
 
 ## Usage
 
-### Basic Configuration
+Fluid overrides now live exclusively in KubeJS **startup** scripts. Create a file such as `kubejs/startup_scripts/fluid_overrides.js` and register your changes via the `FluidJS.modify` event:
 
-Create or modify data map files in your datapack or mod's resources:
+```js
+FluidJS.modify(event => {
+  event.modify('minecraft:water', fluid => {
+    fluid.luminosity(8)
+         .temperature(320)
+         .motionScale(0.7)
+         .canDrown(false);
+  });
 
-```
-data/your_namespace/data_maps/fluid/fluid_properties.json
-```
-
-### Configuration Format
-
-```json
-{
-  "replace": false,
-  "values": {
-    "minecraft:water": {
-      "lightLevel": 0,
-      "temperature": 300,
-      "viscosity": 1000,
-      "density": 1000,
-      "gaseous": false,
-      "canPushEntity": true,
-      "canSwim": true,
-      "canDrown": true,
-      "canExtinguish": true,
-      "canConvertToSource": true,
-      "levelDecreasePerBlock": 1,
-      "tickDelay": 5
-    },
-    "minecraft:lava": {
-      "lightLevel": 15,
-      "temperature": 1300,
-      "viscosity": 6000,
-      "density": 3000,
-      "gaseous": false,
-      "canPushEntity": true,
-      "canSwim": false,
-      "canDrown": true,
-      "canExtinguish": false,
-      "canConvertToSource": true,
-      "levelDecreasePerBlock": 2,
-      "tickDelay": 30
-    }
-  }
-}
+  event.modify('minecraft:lava', fluid => {
+    fluid.viscosity(9000)
+         .density(3100)
+         .canExtinguish(false)
+         .supportsBoating(false);
+  });
+});
 ```
 
-### Property Descriptions
+Because the event runs during the startup phase, changes apply after the game (or dedicated server) is restarted. `/reload` no longer re-applies overrides.
 
-| Property | Type | Range | Description |
-|----------|------|-------|-------------|
-| `lightLevel` | Integer | 0-15 | Light level emitted by the fluid |
-| `temperature` | Integer | Any | Temperature of the fluid in Kelvin |
-| `viscosity` | Integer | 0+ | How thick/sticky the fluid is |
-| `density` | Integer | Any | Fluid density (affects entity movement) |
-| `gaseous` | Boolean | - | Whether the fluid behaves as a gas |
-| `canPushEntity` | Boolean | - | Whether the fluid can push entities |
-| `canSwim` | Boolean | - | Whether entities can swim in this fluid |
-| `canDrown` | Boolean | - | Whether entities can drown in this fluid |
-| `canExtinguish` | Boolean | - | Whether the fluid can extinguish fire |
-| `canConvertToSource` | Boolean | - | Whether flowing fluid can become source blocks |
-| `levelDecreasePerBlock` | Integer | 1-8 | How much the fluid level decreases per block |
-| `tickDelay` | Integer | 1+ | Delay between fluid flow updates |
-| `motionScale` | String | - | Scale factor for entity motion in fluid |
+## Property Reference
 
-### Example Configurations
-
-#### Glowing Water
-```json
-{
-  "replace": false,
-  "values": {
-    "minecraft:water": {
-      "lightLevel": 8
-    }
-  }
-}
-```
-
-#### Slower Lava
-```json
-{
-  "replace": false,
-  "values": {
-    "minecraft:lava": {
-      "tickDelay": 60,
-      "viscosity": 10000
-    }
-  }
-}
-```
-
-#### Mod Fluid Support
-```json
-{
-  "replace": false,
-  "values": {
-    "thermal:crude_oil": {
-      "lightLevel": 0,
-      "viscosity": 8000,
-      "canSwim": false,
-      "canExtinguish": false
-    }
-  }
-}
-```
+| Method | Description |
+|--------|-------------|
+| `luminosity(int value)` | Sets the emitted light level (0-15). |
+| `density(int value)` | Adjusts how strongly the fluid pushes entities. |
+| `temperature(int value)` | Defines the fluid temperature in Kelvin. |
+| `viscosity(int value)` | Controls how quickly the fluid flows. |
+| `rarity(String rarity)` | Overrides tooltip rarity (common/uncommon/rare/epic). |
+| `motionScale(double value)` | Scales entity motion speed while inside the fluid. |
+| `fallDistanceModifier(float value)` | Reduces or amplifies fall damage taken in the fluid. |
+| `canPush(boolean value)` | Toggles whether the fluid can push entities. |
+| `canSwim(boolean value)` | Controls if entities can swim. |
+| `canDrown(boolean value)` | Determines if living entities can drown. |
+| `canExtinguish(boolean value)` | Whether the fluid extinguishes fire. |
+| `canConvertToSource(boolean value)` | Allows flowing fluid to recreate source blocks. |
+| `canHydrate(boolean value)` | Enables farmland hydration. |
+| `supportsBoating(boolean value)` | Allows boats to travel on the fluid. |
 
 ## Development
 
@@ -139,6 +66,7 @@ data/your_namespace/data_maps/fluid/fluid_properties.json
 - Minecraft 1.21.1
 
 ### Building
+
 ```bash
 ./gradlew build
 ```
