@@ -1,4 +1,4 @@
-package cn.qihuang02.fluidjs.kubejs;
+package cn.qihuang02.fluidjs.manager;
 
 import cn.qihuang02.fluidjs.mixin.FluidTypeAccessor;
 import dev.latvian.mods.kubejs.typings.Info;

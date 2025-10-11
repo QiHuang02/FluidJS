@@ -1,6 +1,8 @@
-package cn.qihuang02.fluidjs.kubejs;
+package cn.qihuang02.fluidjs.manager;
 
 import cn.qihuang02.fluidjs.FluidJS;
+import cn.qihuang02.fluidjs.kubejs.FluidModificationEvent;
+import cn.qihuang02.fluidjs.kubejs.KubeJSEvents;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
@@ -24,7 +26,7 @@ public final class FluidModificationManager {
     public static void ensureInitialized() {
         if (!initialized) {
             initialized = true;
-            KubeJSEvents.MODIFICATION.post(new FluidModificationEventJS());
+            KubeJSEvents.MODIFICATION.post(new FluidModificationEvent());
         }
     }
 

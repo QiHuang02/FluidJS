@@ -1,6 +1,6 @@
 package cn.qihuang02.fluidjs.mixin;
 
-import cn.qihuang02.fluidjs.kubejs.FluidModificationManager;
+import cn.qihuang02.fluidjs.manager.FluidModificationManager;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;

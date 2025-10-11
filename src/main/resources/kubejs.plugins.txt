@@ -1,1 +1,1 @@
-fluidjs=cn.qihuang02.fluidjs.kubejs.FluidJSKubePlugin
+cn.qihuang02.fluidjs.FluidJSPlugin
