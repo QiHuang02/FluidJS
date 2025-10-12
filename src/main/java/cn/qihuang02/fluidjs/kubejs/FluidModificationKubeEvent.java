@@ -16,7 +16,7 @@ public class FluidModificationKubeEvent implements KubeEvent {
             return;
         }
 
-        Map<String, Object> fluidProps = FluidPropertiesManager.getOverrides().computeIfAbsent(id, k -> new ConcurrentHashMap<>());
+        Map<String, Object> fluidProps = FluidPropertiesManager.getOrCreateProperties(id);
         FluidModifications builder = new FluidModifications(fluidProps);
         consumer.accept(builder);
 //        ScriptRuntime

@@ -1,10 +1,12 @@
 package cn.qihuang02.fluidjs.kubejs;
 
+import cn.qihuang02.fluidjs.FluidJS;
 import dev.latvian.mods.kubejs.typings.Info;
 import dev.latvian.mods.rhino.util.HideFromJS;
 import net.minecraft.world.item.Rarity;
 
 import java.util.Map;
+import java.util.Optional;
 
 public class FluidModifications {
     private final Map<String, Object> properties;
@@ -40,8 +42,25 @@ public class FluidModifications {
 
     @Info("Sets the rarity of the fluid, affecting its name color in tooltips. Accepts 'common', 'uncommon', 'rare', 'epic'.")
     public FluidModifications rarity(String rarity) {
-        properties.put("rarity", Rarity.valueOf(rarity.toUpperCase()));
+        Optional<Rarity> parsed = Optional.ofNullable(rarity)
+                .map(String::trim)
+                .filter(value -> !value.isEmpty())
+                .flatMap(FluidModifications::parseRarity);
+        if (parsed.isEmpty()) {
+            FluidJS.LOGGER.warn("FluidJS.modify received unknown rarity '{}'; keeping previous value.", rarity);
+            return this;
+        }
+        properties.put("rarity", parsed.get());
         return this;
+    }
+
+    private static Optional<Rarity> parseRarity(String value) {
+        for (Rarity candidate : Rarity.values()) {
+            if (candidate.name().equalsIgnoreCase(value)) {
+                return Optional.of(candidate);
+            }
+        }
+        return Optional.empty();
     }
 
     @Info("Sets how much the fluid affects entity movement speed. Lower values mean more drag.")
