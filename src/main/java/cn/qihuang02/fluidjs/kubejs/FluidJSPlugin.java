@@ -7,12 +7,8 @@ import dev.latvian.mods.kubejs.plugin.KubeJSPlugin;
 import org.jetbrains.annotations.NotNull;
 
 public class FluidJSPlugin implements KubeJSPlugin {
-    public static final EventGroup GROUP = EventGroup.of("FluidJS");
-
-    public static final EventHandler MODIFY = GROUP.startup("modify", () -> ModifyFluidPropertiesEvent.class);
-
     @Override
     public void registerEvents(@NotNull EventGroupRegistry registry) {
-        registry.register(GROUP);
+        registry.register(FluidJSEvents.GROUP);
     }
 }

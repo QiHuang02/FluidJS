@@ -8,15 +8,16 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
-public class ModifyFluidPropertiesEvent implements KubeEvent {
-    public void modify(String fluidId, Consumer<FluidPropertySpecificBuilder> consumer) {
+public class FluidModificationKubeEvent implements KubeEvent {
+
+    public void modify(String fluidId, Consumer<FluidModifications> consumer) {
         ResourceLocation id = ResourceLocation.tryParse(fluidId);
         if (id == null) {
             return;
         }
 
         Map<String, Object> fluidProps = FluidPropertiesManager.getOverrides().computeIfAbsent(id, k -> new ConcurrentHashMap<>());
-        FluidPropertySpecificBuilder builder = new FluidPropertySpecificBuilder(fluidProps);
+        FluidModifications builder = new FluidModifications(fluidProps);
         consumer.accept(builder);
 //        ScriptRuntime
     }

@@ -22,11 +22,6 @@ public abstract class BlockStateMixin {
         return (BlockState) (Object) this;
     }
 
-    /**
-     * 拦截所有方块状态的 getLightEmission 方法调用。
-     * 但我们只在方块是 LiquidBlock 的实例时才执行我们的逻辑。
-     * 这允许我们动态地覆写“烘焙”在方块属性中的亮度值。
-     */
     @Inject(method = "getLightEmission",
             at = @At("HEAD"),
             cancellable = true)

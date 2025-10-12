@@ -1,6 +1,5 @@
 package cn.qihuang02.fluidjs;
 
-import cn.qihuang02.fluidjs.kubejs.FluidJSStartupScriptRunner;
 import com.mojang.logging.LogUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
@@ -22,15 +21,5 @@ public class FluidJS {
     }
 
     public FluidJS(@NotNull IEventBus modEventBus, ModContainer container) {
-        LOGGER.info("FluidJS is loading!");
-
-        modEventBus.addListener(this::commonSetup);
-
-        LOGGER.info("FluidJS initialization completed!");
-    }
-
-    private void commonSetup(final FMLCommonSetupEvent event) {
-        event.enqueueWork(FluidJSStartupScriptRunner::apply);
-        LOGGER.info("FluidJS common setup completed!");
     }
 }

@@ -50,7 +50,7 @@ config="${mod_id}.mixins.json"
     modId="kubejs"
     type="required"
     versionRange="${kubejs_version}"
-    ordering="AFTER"
+    ordering="NONE"
     side="BOTH"
 
 # Features are specific properties of the game environment, that you may want to declare you require. This example declares
